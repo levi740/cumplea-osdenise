@@ -1,0 +1,586 @@
+/* =========================================================
+   GALAXIA DE FLORES AMARILLAS - ESTILOS DE CUMPLEAÑOS
+   Diseño de Alta Fidelidad Espacial con Glassmorphism
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --gold-primary: #ffd700;
+    --gold-light: #fff3a8;
+    --gold-glow: rgba(255, 215, 0, 0.45);
+    --gold-dim: #b8971f;
+    --amber-warm: #ffaa00;
+    --bg-dark: #05050b;
+    --glass-bg: rgba(13, 15, 28, 0.68);
+    --glass-border: rgba(255, 215, 0, 0.25);
+    --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(255, 215, 0, 0.15);
+    --text-light: #f6f7fb;
+    --text-muted: #b5b9cc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #06060c;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-light);
+    user-select: none;
+}
+
+/* Canvas de la Galaxia 3D */
+#galaxy-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    display: block;
+}
+
+/* Capa de Viñeta y atmósfera cósmica idéntica al video de TikTok */
+.cosmic-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 25%, rgba(210, 185, 20, 0.28) 0%, rgba(100, 90, 10, 0.12) 40%, rgba(6, 6, 12, 0.75) 80%),
+                radial-gradient(circle at center, transparent 35%, rgba(5, 5, 10, 0.8) 95%);
+}
+
+/* =========================================================
+   PANTALLA DE ENTRADA (Para habilitar Audio y Bienvenida)
+   ========================================================= */
+.intro-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #0f1026 0%, #030308 100%);
+    backdrop-filter: blur(8px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s;
+    text-align: center;
+    padding: 24px;
+}
+
+.intro-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50px;
+    color: var(--gold-light);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+    animation: pulseGlow 3s infinite ease-in-out;
+}
+
+.intro-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffffff 20%, var(--gold-light) 60%, var(--amber-warm) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.intro-recipient {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.2rem, 7vw, 4rem);
+    color: var(--gold-primary);
+    text-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    margin-bottom: 24px;
+}
+
+.intro-desc {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 480px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.intro-btn {
+    position: relative;
+    padding: 16px 42px;
+    background: linear-gradient(135deg, #ffd700, #ffaa00);
+    border: none;
+    border-radius: 50px;
+    color: #120e00;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 170, 0, 0.3);
+    transition: all 0.35s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.intro-btn:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 12px 40px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 170, 0, 0.5);
+}
+
+.intro-btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* =========================================================
+   INTERFAZ PRINCIPAL / BOTONES FLOTANTES
+   ========================================================= */
+.ui-container {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(16px, 3vw, 32px);
+}
+
+/* Cabecera sutil */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.brand-badge {
+    pointer-events: auto;
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(13, 15, 28, 0.5);
+    padding: 10px 18px;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+.brand-badge span {
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+}
+
+.actions-cluster {
+    display: flex;
+    gap: 12px;
+    pointer-events: auto;
+}
+
+.control-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    color: var(--gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.control-btn:hover {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: var(--gold-primary);
+    transform: scale(1.08);
+    box-shadow: 0 0 20px var(--gold-glow);
+}
+
+/* Indicador musical activo */
+.music-btn.playing {
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 20px var(--gold-glow);
+    animation: musicPulse 2s infinite ease-in-out;
+}
+
+/* Pie flotante con botón para abrir la tarjeta */
+.bottom-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.open-card-btn {
+    pointer-events: auto;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 170, 0, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 16px 36px;
+    border-radius: 50px;
+    color: #120e00;
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 35px var(--gold-glow);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: floatButton 3.5s ease-in-out infinite;
+}
+
+.open-card-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), 0 0 50px rgba(255, 215, 0, 0.6);
+}
+
+.interactive-hint {
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+    opacity: 0.85;
+}
+
+/* =========================================================
+   TARJETA / CARTA MODAL DE CUMPLEAÑOS
+   ========================================================= */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(3, 3, 8, 0.75);
+    backdrop-filter: blur(14px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.birthday-card {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: clamp(24px, 4vw, 44px);
+    box-shadow: var(--glass-shadow);
+    transform: scale(0.9) translateY(30px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dim) transparent;
+}
+
+.modal-backdrop.active .birthday-card {
+    transform: scale(1) translateY(0);
+}
+
+/* Botón cerrar modal */
+.close-modal-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.25s ease;
+}
+
+.close-modal-btn:hover {
+    background: rgba(255, 215, 0, 0.25);
+    color: var(--gold-primary);
+    transform: rotate(90deg);
+}
+
+/* Cabecera de la Tarjeta */
+.card-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.card-tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold-primary);
+    background: rgba(255, 215, 0, 0.12);
+    padding: 6px 16px;
+    border-radius: 30px;
+    margin-bottom: 12px;
+}
+
+.card-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.card-recipient {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    color: var(--gold-primary);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    line-height: 1.2;
+}
+
+.card-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* Separador decorativo dorado */
+.card-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 20px 0 24px 0;
+}
+
+.card-divider .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
+}
+
+.card-divider .flower-icon {
+    color: var(--gold-primary);
+    font-size: 1.4rem;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+    animation: spinSlow 15s linear infinite;
+}
+
+/* Foto del cumpleañero (opcional) */
+.card-photo-wrapper {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 20px auto;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--gold-primary), #ff8800);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+    display: none; /* Se activa dinámicamente si hay fotoUrl */
+}
+
+.card-photo-wrapper.has-photo {
+    display: block;
+}
+
+.card-photo {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Cuerpo de la dedicatoria */
+.card-message-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 26px;
+    line-height: 1.8;
+    color: #e5e8f3;
+    font-size: 1.05rem;
+    white-space: pre-line;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-message-box::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    font-family: 'Great Vibes', cursive;
+    font-size: 5rem;
+    color: rgba(255, 215, 0, 0.1);
+    pointer-events: none;
+}
+
+/* Deseos cósmicos en cuadrícula */
+.wishes-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+    color: var(--gold-light);
+    margin-bottom: 14px;
+    text-align: center;
+}
+
+.wishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+    margin-bottom: 26px;
+}
+
+.wish-item {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 215, 0, 0.12);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.wish-item:hover {
+    background: rgba(255, 215, 0, 0.08);
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.wish-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.wish-info h4 {
+    font-size: 0.95rem;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.wish-info p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* Firma final */
+.card-signature {
+    text-align: right;
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    color: var(--gold-primary);
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    margin-top: 10px;
+}
+
+/* =========================================================
+   ANIMACIONES
+   ========================================================= */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        border-color: rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        border-color: rgba(255, 215, 0, 0.6);
+    }
+}
+
+@keyframes floatButton {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes spinSlow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes musicPulse {
+    0%, 100% {
+        box-shadow: 0 0 15px var(--gold-glow);
+    }
+    50% {
+        box-shadow: 0 0 28px rgba(255, 215, 0, 0.8);
+    }
+}
+
+/* =========================================================
+   RESPONSIVIDAD MÓVIL
+   ========================================================= */
+@media (max-width: 600px) {
+    .birthday-card {
+        padding: 20px 16px;
+        border-radius: 20px;
+    }
+    .wishes-grid {
+        grid-template-columns: 1fr;
+    }
+    .open-card-btn {
+        padding: 14px 28px;
+        font-size: 0.95rem;
+    }
+    .intro-screen {
+        padding: 16px;
+    }
+}

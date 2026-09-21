@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Galaxia de Flores Amarillas | ¡Feliz Cumpleaños!</title>
+    <meta name="description" content="Una experiencia web 3D interactiva de flores amarillas y galaxia cósmica para dedicar un feliz cumpleaños inolvidable.">
+
+    <!-- Favicon de Flor Amarilla -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌻</text></svg>">
+
+    <!-- Estilos Principales -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Three.js (Librería 3D) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <!-- Lienzo 3D de la Galaxia -->
+    <canvas id="galaxy-canvas"></canvas>
+
+    <!-- Atmósfera y Viñeta Cósmica -->
+    <div class="cosmic-overlay"></div>
+
+    <!-- =========================================================
+         PANTALLA DE ENTRADA (Bienvenida y Activación de Audio)
+         ========================================================= -->
+    <section id="intro-screen" class="intro-screen">
+        <div class="intro-badge">✨ Detalle Especial de Cumpleaños</div>
+        <h1 class="intro-title">Un Universo para Ti</h1>
+        <div id="intro-recipient-text" class="intro-recipient">Para Alguien Muy Especial</div>
+        <p class="intro-desc">
+            Cada flor amarilla en esta galaxia representa un deseo, una sonrisa y la luz inmensa que traes al mundo.
+        </p>
+        <button id="start-experience-btn" class="intro-btn">
+            <span>Explorar Galaxia</span>
+            <span>🌟</span>
+        </button>
+    </section>
+
+    <!-- =========================================================
+         INTERFAZ Y CONTROLES FLOTANTES
+         ========================================================= -->
+    <div class="ui-container">
+        <!-- Barra Superior -->
+        <header class="top-bar">
+            <div class="brand-badge">
+                <span>💛</span>
+                <span>Flores Amarillas Cósmicas</span>
+            </div>
+            <div class="actions-cluster">
+                <button id="burst-btn" class="control-btn" title="Lluvia de Estrellas">✨</button>
+                <button id="music-toggle-btn" class="control-btn music-btn" title="Activar / Silenciar Música">🔇</button>
+                <button id="fullscreen-btn" class="control-btn" title="Pantalla Completa">⛶</button>
+            </div>
+        </header>
+
+        <!-- Barra Inferior con Botón para Abrir Carta -->
+        <footer class="bottom-bar">
+            <button id="open-card-btn" class="open-card-btn">
+                <span>💌 Abrir Felicitación</span>
+            </button>
+            <p class="interactive-hint">✨ Arrastra la pantalla para rotar la galaxia de rosas amarillas</p>
+        </footer>
+    </div>
+
+    <!-- =========================================================
+         MODAL / TARJETA DE CUMPLEAÑOS
+         ========================================================= -->
+    <div id="modal-backdrop" class="modal-backdrop">
+        <article class="birthday-card" id="birthday-card">
+            <!-- Botón Cerrar -->
+            <button id="close-modal-btn" class="close-modal-btn" title="Cerrar">✕</button>
+
+            <!-- Cabecera -->
+            <div class="card-header">
+                <span class="card-tag">DEDICATORIA CÓSMICA</span>
+                <h2 id="card-title-text" class="card-title">¡Feliz Cumpleaños!</h2>
+                <div id="card-recipient-text" class="card-recipient">Para Alguien Especial</div>
+                <p id="card-subtitle-text" class="card-subtitle">Que el universo conspire a tu favor</p>
+            </div>
+
+            <!-- Foto opcional -->
+            <div id="card-photo-wrapper" class="card-photo-wrapper">
+                <img id="card-photo-img" class="card-photo" src="" alt="Cumpleañero/a">
+            </div>
+
+            <!-- Separador Decorativo -->
+            <div class="card-divider">
+                <span class="line"></span>
+                <span class="flower-icon">🌻</span>
+                <span class="line"></span>
+            </div>
+
+            <!-- Mensaje Central -->
+            <div class="card-message-box">
+                <p id="card-message-text">
+                    Cargando dedicatoria...
+                </p>
+            </div>
+
+            <!-- Deseos de Cumpleaños -->
+            <h3 class="wishes-title">✨ Deseos Para Tu Nuevo Ciclo</h3>
+            <div id="wishes-grid" class="wishes-grid">
+                <!-- Se llena dinámicamente desde config.js -->
+            </div>
+
+            <!-- Firma -->
+            <div id="card-signature-text" class="card-signature">
+                Con todo mi cariño ✨
+            </div>
+        </article>
+    </div>
+
+    <!-- Archivos de Lógica -->
+    <script src="config.js"></script>
+    <script src="galaxy.js"></script>
+</body>
+</html>
